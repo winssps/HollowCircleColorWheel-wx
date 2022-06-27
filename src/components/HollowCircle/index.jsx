@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Taro from "@tarojs/taro";
 import {
   validHex,
   hexToHsva,
@@ -30,8 +31,8 @@ const pxTorpx = (px = 0) => {
   const pixelRatio1 = (750 / wx.getSystemInfoSync().windowWidth);  // 推荐
   // const pixelRatio2 = wx.getSystemInfoSync().windowWidth / 750;
 
+  return wx.getSystemInfoSync().windowWidth / 750 * (px * 2);
 
-  return pixelRatio1 * px
 }
 
 function getHandleRange({ width = 0 }) {
@@ -72,9 +73,13 @@ function getWheelHandlePosition(props, hsv) {
 
   // 基准 200    200 / 2 - (200 / 2 * 0.1) =  100 - (100*0.1) = 90
 
+  const base = (pxTorpx(200) / 2) - ((pxTorpx(200) / 2) * 0.1);
+
+  console.log(base, "--------------base")
+
   return {
-    x: cx + 90 * Math.cos(handleAngle) * direction,
-    y: cy + 90 * Math.sin(handleAngle) * direction,
+    x: cx + base * Math.cos(handleAngle) * direction,
+    y: cy + base * Math.sin(handleAngle) * direction,
   };
 
   return rerule;
@@ -103,10 +108,10 @@ export default (props) => {
     pointer,
     className,
     style,
-    width = 200,
-    height = 200,
+    width = pxTorpx(200),
+    height = pxTorpx(200),
     direction = 'anticlockwise',
-    angle = 180,
+    angle = pxTorpx(180),
     color,
     onChange,
     ...other
@@ -151,7 +156,7 @@ export default (props) => {
   };
 
   useEffect(() => {
-    console.log(wx.getSystemInfoSync().windowWidth, pxTorpx(100))
+    console.log(wx.getSystemInfoSync().windowWidth, pxTorpx(200))
   }, [])
 
   return (
@@ -177,6 +182,8 @@ export default (props) => {
       })}
       <div
         style={{
+          width: `${width}px`,
+          height: `${height}px`,
           position: 'absolute',
           borderRadius: '50%',
           background:
@@ -187,7 +194,10 @@ export default (props) => {
           inset: 0,
         }}
       >
-        <div class="white"></div>
+        <div class="white" style={{
+          width: `${pxTorpx(160)}px`,
+          height: `${pxTorpx(160)}px`
+        }}></div>
       </div>
       {/* <view
         style={{

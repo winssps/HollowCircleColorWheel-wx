@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import Taro from "@tarojs/taro";
 import { isTouch, preventDefaultMove, getRelativePosition, Interaction, useEventCallback } from './utils';
 
 export * from './utils';
@@ -74,8 +75,8 @@ const Interactive = React.forwardRef((props, ref) => {
       style={{
         ...reset.style,
         touchAction: 'none',
-        width: `${reset.style.width * 2}rpx`,
-        height: `${reset.style.height * 2}rpx`
+        width: `${reset.style.width}px`,
+        height: `${reset.style.height}px`
       }}
       ref={container}
       tabIndex={0}
